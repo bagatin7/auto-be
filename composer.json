@@ -4,10 +4,17 @@
     "description": "The skeleton application for the Laravel framework.",
     "keywords": ["laravel", "framework"],
     "license": "MIT",
+    "repositories": [
+    {
+        "type": "vcs",
+        "url": "https://github.com/DevM3Team/paged-index"
+    }
+],
     "require": {
         "php": "^8.2",
         "laravel/framework": "^11.0",
-        "laravel/tinker": "^2.9"
+        "laravel/tinker": "^2.9",
+        "m3team/paged-index": "dev-release/4.6.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
