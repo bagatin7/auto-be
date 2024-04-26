@@ -6,7 +6,6 @@ use App\Http\PagedIndexes\UserPagedIndex;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UserRequest;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class UserController extends Controller

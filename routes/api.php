@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RecordController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -13,6 +14,9 @@ Route::group([
     Route::post('token', [AccessTokenController::class, 'issueToken']);
 });
 Route::group(['middleware' => 'auth:api'], function () {
+    Route::post('logout', [AuthController::class, 'logout']);
+    Route::get('user', [AuthController::class, 'user']);
+
     Route::apiResources([
         'records' => RecordController::class,
         'users' => UserController::class

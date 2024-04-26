@@ -3,6 +3,8 @@
 use App\Models\User;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Laravel\Passport\Client;
+use Laravel\Passport\Token;
+use function Pest\Laravel\getJson;
 use function Pest\Laravel\postJson;
 
 /**
@@ -39,3 +41,35 @@ it('should issue a token', function () {
             ->hasAll(['token_type', 'expires_in', 'access_token', 'refresh_token'])
             ->etc());
 });
+
+function issueToken()
+{
+    $password = fake()->password;
+    $secret = fake()->password;
+    $client = createPassportClient($secret);
+    $user = User::factory()->create(['password' => $password]);
+    return postJson("api/oauth/token", [
+        'grant_type' => 'password',
+        'client_id' => $client->id,
+        'client_secret' => $secret,
+        'username' => $user->email,
+        'password' => $password
+    ])->json();
+}
+
+it('should revoke a token', function ($accessToken) {
+    postJson("api/logout", [], ["Authorization" => "Bearer $accessToken"])
+        ->assertSuccessful();
+    expect(Token::query()->where('revoked', false)->count())->toBe(0);
+})->with([fn() => issueToken()["access_token"]]);
+
+it('should return logged user\'s info', function (User $user) {
+    actingAsUser($user);
+    getJson("api/user")
+        ->assertSuccessful()
+        ->assertJson(fn(AssertableJson $json) => $json
+            ->where('id', $user->id)
+            ->where('name', $user->name)
+            ->where('email', $user->email)
+            ->etc());
+})->with([fn() => User::factory()->create()]);
