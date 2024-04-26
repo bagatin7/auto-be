@@ -12,8 +12,9 @@ Route::group([
 ], function () {
     Route::post('token', [AccessTokenController::class, 'issueToken']);
 });
-
-Route::apiResources([
-    'records' => RecordController::class,
-    'users' => UserController::class
-]);
+Route::group(['middleware' => 'auth:api'], function () {
+    Route::apiResources([
+        'records' => RecordController::class,
+        'users' => UserController::class
+    ]);
+});

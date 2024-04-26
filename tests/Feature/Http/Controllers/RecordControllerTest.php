@@ -9,6 +9,8 @@ use function Pest\Laravel\getJson;
 use function Pest\Laravel\postJson;
 use function Pest\Laravel\putJson;
 
+beforeEach(fn() => actingAsRandomUser());
+
 it('lists the records', function (Collection $collection) {
     getJson("api/records")
         ->assertSuccessful()

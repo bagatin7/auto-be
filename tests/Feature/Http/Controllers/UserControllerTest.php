@@ -9,12 +9,14 @@ use function Pest\Laravel\getJson;
 use function Pest\Laravel\postJson;
 use function Pest\Laravel\putJson;
 
+beforeEach(fn() => actingAsRandomUser());
+
 it('should lists users', function (Collection $collection) {
     getJson('api/users')
         ->assertSuccessful()
         ->assertJson(fn(AssertableJson $json) => $json
             ->hasAll(['objects', 'total', 'page_index', 'page_size'])
-            ->has('objects', $collection->count())
+            ->has('objects', User::count())
             ->etc());
 })->with([fn() => User::factory(10)->create()]);
 

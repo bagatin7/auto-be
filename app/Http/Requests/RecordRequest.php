@@ -15,6 +15,13 @@ class RecordRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'user_id' => $this->user_id ?? Auth::id()
+        ]);
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
